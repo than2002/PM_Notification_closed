@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZPM_NOTIFICATION_CLOSING_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="PMNotiClosing" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Notinum"/>
+                </Key>
+                <Property Name="Edate" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="EDATE" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Etime" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="ETIME" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Mobid" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="MOBID" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Msgrp" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="MSGRP" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Notinum" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="NOTINUM" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Urtxt" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="URTXT" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Message" Type="Edm.String" Nullable="false" MaxLength="100" sap:unicode="false" sap:label="Character 100" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Success" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Single-Character Flag" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityContainer Name="ZPM_NOTIFICATION_CLOSING_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="PMNotiClosingSet" EntityType="ZPM_NOTIFICATION_CLOSING_SRV.PMNotiClosing" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+            </EntityContainer>
+            <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <atom:link rel="self" href="https://vhnmrds4ci.sap.jbmgroup.com:44300/sap/opu/odata/sap/ZPM_NOTIFICATION_CLOSING_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="https://vhnmrds4ci.sap.jbmgroup.com:44300/sap/opu/odata/sap/ZPM_NOTIFICATION_CLOSING_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

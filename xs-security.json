@@ -1,0 +1,7 @@
+{
+  "xsappname": "pmnotificationclosing",
+  "tenant-mode": "dedicated",
+  "description": "Security profile of called application",
+  "scopes": [],
+  "role-templates": []
+}
