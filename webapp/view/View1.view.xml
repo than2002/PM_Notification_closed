@@ -47,6 +47,13 @@
                                 columnsM="1"
                                 singleContainerFullSize="true">
 
+                                <Label text="User ID / Email" required="true"/>
+                                <Input
+                                    id="inpUname"
+                                    value="{viewModel>/Uname}"
+                                    placeholder="Enter User ID / Email"
+                                    submit=".onGetDetails"/>
+
                                 <Label text="Notification Number" required="true"/>
                                 <Input
                                     id="inpNotinum"
@@ -59,15 +66,10 @@
                                     liveChange=".onNotinumLiveChange"
                                     submit=".onGetDetails"/>
 
-                                <Label text="User ID / Email" required="true"/>
-                                <Input
-                                    id="inpMobid"
-                                    value="{viewModel>/Mobid}"
-                                    placeholder="Enter User ID / Email"
-                                    submit=".onGetDetails"/>
 
                                 <Label text=""/>
                                 <HBox wrap="Wrap">
+                                
                                     <Button
                                         text="Get Details"
                                         type="Emphasized"
@@ -144,8 +146,11 @@
                             <Label text="Planning Plant"/>
                             <Input value="{viewModel>/IWERK}" editable="false"/>
 
-                            <Label text="Planner Group"/>
-                            <Input value="{viewModel>/INGRP}" editable="false"/>
+                            
+                            <Label text="Maintenance Plant"/>
+                            <Input value="{viewModel>/WARPL}" editable="false"/>
+                            <Label text="Reported By"/>
+                            <Input value="{viewModel>/QMNAM}" editable="false"/>
 
                             <!-- Action fields -->
                             <Label text="End Date" required="true"/>
@@ -170,9 +175,9 @@
                                 type="Number"
                                 value="{viewModel>/Msgrp}"
                                 liveChange=".onRoomValue"
-                                placeholder="Enter Room Value"/>
+                                placeholder="0.00"/>
 
-                            <Label text="Cause Text / Remarks"/>
+                            <Label text="Cause Text / Remarks" required="true"/>
                             <TextArea
                                 id="txtUrtxt"
                                 value="{viewModel>/Urtxt}"
