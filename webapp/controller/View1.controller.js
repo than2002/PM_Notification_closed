@@ -24,15 +24,25 @@ sap.ui.define([
     return Controller.extend("pmnotificationclosing.controller.View1", {
 
         onInit: function () {
-            debugger;
+
             var oVM = new JSONModel(this._getInitialData());
             this.getView().setModel(oVM, "viewModel");
 
-            // Logged in Fiori user 
-            oVM.setProperty("/Uname", this._getLoggedInUser());
+            var sUser = this._getLoggedInUser();
+            oVM.setProperty("/Uname", sUser);
+
+            // SAFE header set
+            var oModel = this.getView().getModel();
+            if (oModel) {
+                oModel.setHeaders({
+                    "x-user-id": sUser
+                });
+            }
 
             this._setDefaultDateTime();
         },
+
+
 
         _getInitialData: function () {
             return {
@@ -63,12 +73,31 @@ sap.ui.define([
             };
         },
 
+        //  GET LOGGED USER 
+        _getLoggedInUser: function () {
+            try {
+                if (sap.ushell && sap.ushell.Container && sap.ushell.Container.getUser()) {
+                    return sap.ushell.Container.getUser().getId();
+                }
+            } catch (e) {
+                
+            }
+           
+            return "";
+        },
         // F4 VALUE  
        onValueHelpNoti: function () {
-        debugger;
+        
             var oView = this.getView();
             var oModel = oView.getModel();
             var oVM = oView.getModel("viewModel");
+            var sUser = oVM.getProperty("/Uname");
+            // 🔥 update header every time (important for testing users)
+            oModel.setHeaders({
+                "x-user-id": sUser
+            });
+
+           
 
             if (!this._oNotiVH) {
                 this._oNotiVH = new SelectDialog({
@@ -108,18 +137,6 @@ sap.ui.define([
             this._oNotiVH.open();
         },
        
-        //  GET LOGGED USER 
-        _getLoggedInUser: function () {
-            try {
-                if (sap.ushell && sap.ushell.Container && sap.ushell.Container.getUser()) {
-                    return sap.ushell.Container.getUser().getId();
-                }
-            } catch (e) {
-                
-            }
-           
-            return " ";
-        },
 
         //  GET DETAILS 
         onGetDetails: function () {
