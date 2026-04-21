@@ -77,13 +77,13 @@
                                         press=".onGetDetails"
                                         enabled="{= !${viewModel>/busy} }"/>
 
-                                    <Button
+                                    <!-- <Button
                                         text="Clear"
                                         type="Transparent"
                                         icon="sap-icon://reset"
                                         press=".onClearAll"
                                         class="sapUiTinyMarginBegin"
-                                        enabled="{= !${viewModel>/busy} }"/>
+                                        enabled="{= !${viewModel>/busy} }"/> -->
                                 </HBox>
                             </f:SimpleForm>
                         </VBox>
@@ -157,7 +157,7 @@
                             <DatePicker
                                 id="dpCloseDate"
                                 value="{viewModel>/Edate}"
-                                displayFormat="yyyy-MM-dd"
+                                displayFormat="dd-MM-yyyy"
                                 valueFormat="yyyy-MM-dd"
                                 placeholder="Select End Date"/>
 

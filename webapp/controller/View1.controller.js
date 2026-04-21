@@ -46,7 +46,7 @@ sap.ui.define([
 
         _getInitialData: function () {
             return {
-                Uname: "",
+                Uname: "SAP.PM@JBMGROUP.COM",
                 Notinum: "",
                 Msgrp: "",
                 Edate: "",
@@ -76,7 +76,7 @@ sap.ui.define([
         //  GET LOGGED USER 
         _getLoggedInUser: function () {
             try {
-                if (sap.ushell && sap.ushell.Container && sap.ushell.Container.getUser()) {
+                if (sap.ushell && sap.ushell.Container && sap.ushell.Container.getUser())  {
                     return sap.ushell.Container.getUser().getId();
                 }
             } catch (e) {
@@ -85,6 +85,14 @@ sap.ui.define([
            
             return "";
         },
+
+        // _getLoggedInUser: function () {
+        //     if (sap.ushell && sap.ushell.Container && sap.ushell.Container.getUser()) {
+        //         return sap.ushell.Container.getUser().getId();
+        //     }
+        //     // ONLY for BAS / app-preview testing
+        //     return "sap.pm@jbmgroup.com";
+        // },
         // F4 VALUE  
        onValueHelpNoti: function () {
         
@@ -92,7 +100,7 @@ sap.ui.define([
             var oModel = oView.getModel();
             var oVM = oView.getModel("viewModel");
             var sUser = oVM.getProperty("/Uname");
-            // 🔥 update header every time (important for testing users)
+            
             oModel.setHeaders({
                 "x-user-id": sUser
             });
@@ -246,8 +254,8 @@ sap.ui.define([
 
                     MessageBox.success(oData.Message || "Closed Successfully");
 
-                   
-                    this.onGetDetails();
+                    this._resetScreen();
+                    oModel.refresh(true);
                 }.bind(this),
 
                 error: function (oError) {
@@ -279,9 +287,9 @@ sap.ui.define([
 
         _getTodayDate: function () {
             var d = new Date();
-            return d.getFullYear() + "-" +
+            return String(d.getDate()).padStart(2, "0") + "-" +
                 String(d.getMonth() + 1).padStart(2, "0") + "-" +
-                String(d.getDate()).padStart(2, "0");
+                d.getFullYear();
         },
 
         _getCurrentTime: function () {
@@ -294,7 +302,7 @@ sap.ui.define([
         _extractErrorMessage: function (oError) {
             
             try {
-                var sText = oError && (oError.responseText || oError.response && oError.response.body);
+                var sText = oError && (oError.responseText || (oError.response && oError.response.body));
                 if (sText) {
                    
                     try {
@@ -314,6 +322,19 @@ sap.ui.define([
                
             }
             return "Backend Error.";
+        },
+        onResetForm: function () {
+            var oVM = this.getView().getModel("viewModel");
+
+            oVM.setProperty("/Notinum", "");
+            oVM.setProperty("/Msgrp", "");
+            oVM.setProperty("/Urtxt", "");
+
+            // hide details
+            oVM.setProperty("/showDetails", false);
+
+            // reset date time again
+            this._setDefaultDateTime();
         }
 
     });
