@@ -1,36 +1,104 @@
-<mvc:View
-    controllerName="pmnotificationclosing.controller.View1"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
-    xmlns:f="sap.ui.layout.form"
-    xmlns:core="sap.ui.core">
+    <mvc:View
+        controllerName="pmnotificationclosing.controller.View1"
+        xmlns:mvc="sap.ui.core.mvc"
+        xmlns="sap.m"
+        xmlns:f="sap.ui.layout.form"
+        xmlns:core="sap.ui.core">
 
-    <Page
-        id="page"
-        title="PM Notification Closing"
-        class="sapUiResponsiveContentPadding"
-        busy="{viewModel>/busy}"
-        busyIndicatorDelay="0">
+        <Page
+            id="page"
+            title="PM Notification Closing"
+            class="sapUiResponsiveContentPadding"
+            busy="{viewModel>/busy}"
+            busyIndicatorDelay="0">
 
-        <content>
-            <VBox class="sapUiSmallMargin" width="100%">
+            <content>
+                <VBox class="sapUiSmallMargin" width="100%">
 
-                <!-- Search Section -->
-                <Panel
-                    headerText="Search Notification"
-                    expandable="false"
-                    class="sapUiResponsiveMargin">
-                    <content>
-                        <VBox class="sapUiSmallMargin">
-                            <MessageStrip
-                                text="Enter Notification Number manually or select from Value Help, then fetch details."
-                                type="Information"
-                                showIcon="true"
-                                showCloseButton="false"
-                                class="sapUiSmallMarginBottom"/>
+                    <!-- Search Section -->
+                    <Panel
+                        headerText="Search Notification"
+                        expandable="false"
+                        class="sapUiResponsiveMargin">
+                        <content>
+                            <VBox class="sapUiSmallMargin">
+                                <MessageStrip
+                                    text="Enter Notification Number manually or select from Value Help, then fetch details."
+                                    type="Information"
+                                    showIcon="true"
+                                    showCloseButton="false"
+                                    class="sapUiSmallMarginBottom"/>
 
+                                <f:SimpleForm
+                                    id="searchForm"
+                                    editable="true"
+                                    layout="ResponsiveGridLayout"
+                                    labelSpanXL="2"
+                                    labelSpanL="2"
+                                    labelSpanM="4"
+                                    labelSpanS="12"
+                                    adjustLabelSpan="false"
+                                    emptySpanXL="1"
+                                    emptySpanL="1"
+                                    emptySpanM="0"
+                                    emptySpanS="0"
+                                    columnsXL="2"
+                                    columnsL="2"
+                                    columnsM="1"
+                                    singleContainerFullSize="true">
+
+                                    <Label text="User ID / Email" required="true"/>
+                                    <Input
+                                        id="inpUname"
+                                        value="{viewModel>/Uname}"
+                                        placeholder="Enter User ID / Email"
+                                        submit=".onGetDetails"/>
+
+                                    <Label text="Notification Number" required="true"/>
+                                    <Input
+                                        id="inpNotinum"
+                                        value="{viewModel>/Notinum}"
+                                        placeholder="Enter or Select Notification Number"
+                                        maxLength="12"
+                                        showValueHelp="true"
+                                        valueHelpOnly="false"
+                                        valueHelpRequest=".onValueHelpNoti"
+                                        liveChange=".onNotinumLiveChange"
+                                        submit=".onGetDetails"/>
+
+
+                                    <Label text=""/>
+                                    <HBox wrap="Wrap">
+                                    
+                                        <Button
+                                            text="Get Details"
+                                            type="Emphasized"
+                                            icon="sap-icon://search"
+                                            press=".onGetDetails"
+                                            enabled="{= !${viewModel>/busy} }"/>
+
+                                        <!-- <Button
+                                            text="Clear"
+                                            type="Transparent"
+                                            icon="sap-icon://reset"
+                                            press=".onClearAll"
+                                            class="sapUiTinyMarginBegin"
+                                            enabled="{= !${viewModel>/busy} }"/> -->
+                                    </HBox>
+                                </f:SimpleForm>
+                            </VBox>
+                        </content>
+                    </Panel>
+
+                    <!-- Main Detail + Action Screen -->
+                    <Panel
+                        headerText="Detail View"
+                        expandable="false"
+                        visible="{viewModel>/showDetails}"
+                        class="sapUiResponsiveMargin">
+                        <content>
                             <f:SimpleForm
-                                id="searchForm"
+                                id="detailsForm"
                                 editable="true"
                                 layout="ResponsiveGridLayout"
                                 labelSpanXL="2"
@@ -47,167 +115,99 @@
                                 columnsM="1"
                                 singleContainerFullSize="true">
 
-                                <Label text="User ID / Email" required="true"/>
-                                <Input
-                                    id="inpUname"
-                                    value="{viewModel>/Uname}"
-                                    placeholder="Enter User ID / Email"
-                                    submit=".onGetDetails"/>
+                                <!-- Read-only details -->
+                                <Label text="Notification No"/>
+                                <Input value="{viewModel>/Notinum}" editable="false"/>
 
-                                <Label text="Notification Number" required="true"/>
-                                <Input
-                                    id="inpNotinum"
-                                    value="{viewModel>/Notinum}"
-                                    placeholder="Enter or Select Notification Number"
-                                    maxLength="12"
-                                    showValueHelp="true"
-                                    valueHelpOnly="false"
-                                    valueHelpRequest=".onValueHelpNoti"
-                                    liveChange=".onNotinumLiveChange"
-                                    submit=".onGetDetails"/>
+                                <Label text="Notification Type"/>
+                                <Input value="{viewModel>/QMART}" editable="false"/>
 
+                                <Label text="Description"/>
+                                <TextArea value="{viewModel>/QMTXT}" editable="false" rows="2"/>
+
+                                <Label text="Equipment No"/>
+                                <Input value="{viewModel>/EQUNR}" editable="false"/>
+
+                                <Label text="Equipment Description"/>
+                                <Input value="{viewModel>/EQKTX}" editable="false"/>
+
+                                <Label text="Created Date"/>
+                                <Input value="{viewModel>/ERDAT}" editable="false"/>
+
+                                <Label text="Malfunction Date"/>
+                                <Input value="{viewModel>/AUSVN}" editable="false"/>
+
+                                <Label text="Malfunction Time"/>
+                                <Input value="{viewModel>/AUZTV}" editable="false"/>
+
+                                <Label text="Breakdown Indicator"/>
+                                <Input value="{viewModel>/MSAUS}" editable="false"/>
+
+                                <Label text="Planning Plant"/>
+                                <Input value="{viewModel>/IWERK}" editable="false"/>
+
+                                
+                                <Label text="Maintenance Plant"/>
+                                <Input value="{viewModel>/WARPL}" editable="false"/>
+                                <Label text="Reported By"/>
+                                <Input value="{viewModel>/QMNAM}" editable="false"/>
+
+                                <!-- Action fields -->
+                                <Label text="End Date" required="true"/>
+                                <DatePicker
+                                    id="dpCloseDate"
+                                    value="{viewModel>/Edate}"
+                                    displayFormat="dd-MM-yyyy"
+                                    valueFormat="yyyy-MM-dd"
+                                    placeholder="Select End Date"/>
+
+                                <Label text="End Time" required="true"/>
+                                <TimePicker
+                                    id="tpCloseTime"
+                                    value="{viewModel>/Etime}"
+                                    displayFormat="HH:mm:ss"
+                                    valueFormat="HH:mm:ss"
+                                    placeholder="Select End Time"/>
+
+                                <Label text="Room Value"/>
+                                <Input
+                                    id="inpMsgrp"
+                                    type="Number"
+                                    value="{viewModel>/Msgrp}"
+                                    liveChange=".onRoomValue"
+                                    placeholder="0.00"/>
+
+                                <Label text="Cause Text / Remarks" required="true"/>
+                                <TextArea
+                                    id="txtUrtxt"
+                                    value="{viewModel>/Urtxt}"
+                                    rows="4"
+                                    growing="true"
+                                    growingMaxLines="6"
+                                    placeholder="Enter Cause Text / Remarks"/>
 
                                 <Label text=""/>
                                 <HBox wrap="Wrap">
-                                
                                     <Button
-                                        text="Get Details"
-                                        type="Emphasized"
-                                        icon="sap-icon://search"
-                                        press=".onGetDetails"
+                                        text="Notification Close"
+                                        type="Accept"
+                                        icon="sap-icon://complete"
+                                        press=".onCloseNotification"
                                         enabled="{= !${viewModel>/busy} }"/>
 
                                     <!-- <Button
-                                        text="Clear"
+                                        text="Reset"
                                         type="Transparent"
-                                        icon="sap-icon://reset"
-                                        press=".onClearAll"
+                                        icon="sap-icon://refresh"
+                                        press=".onResetForm"
                                         class="sapUiTinyMarginBegin"
                                         enabled="{= !${viewModel>/busy} }"/> -->
                                 </HBox>
                             </f:SimpleForm>
-                        </VBox>
-                    </content>
-                </Panel>
+                        </content>
+                    </Panel>
 
-                <!-- Main Detail + Action Screen -->
-                <Panel
-                    headerText="Detail View"
-                    expandable="false"
-                    visible="{viewModel>/showDetails}"
-                    class="sapUiResponsiveMargin">
-                    <content>
-                        <f:SimpleForm
-                            id="detailsForm"
-                            editable="true"
-                            layout="ResponsiveGridLayout"
-                            labelSpanXL="2"
-                            labelSpanL="2"
-                            labelSpanM="4"
-                            labelSpanS="12"
-                            adjustLabelSpan="false"
-                            emptySpanXL="1"
-                            emptySpanL="1"
-                            emptySpanM="0"
-                            emptySpanS="0"
-                            columnsXL="2"
-                            columnsL="2"
-                            columnsM="1"
-                            singleContainerFullSize="true">
-
-                            <!-- Read-only details -->
-                            <Label text="Notification No"/>
-                            <Input value="{viewModel>/Notinum}" editable="false"/>
-
-                            <Label text="Notification Type"/>
-                            <Input value="{viewModel>/QMART}" editable="false"/>
-
-                            <Label text="Description"/>
-                            <TextArea value="{viewModel>/QMTXT}" editable="false" rows="2"/>
-
-                            <Label text="Equipment No"/>
-                            <Input value="{viewModel>/EQUNR}" editable="false"/>
-
-                            <Label text="Equipment Description"/>
-                            <Input value="{viewModel>/EQKTX}" editable="false"/>
-
-                            <Label text="Created Date"/>
-                            <Input value="{viewModel>/ERDAT}" editable="false"/>
-
-                            <Label text="Malfunction Date"/>
-                            <Input value="{viewModel>/AUSVN}" editable="false"/>
-
-                            <Label text="Malfunction Time"/>
-                            <Input value="{viewModel>/AUZTV}" editable="false"/>
-
-                            <Label text="Breakdown Indicator"/>
-                            <Input value="{viewModel>/MSAUS}" editable="false"/>
-
-                            <Label text="Planning Plant"/>
-                            <Input value="{viewModel>/IWERK}" editable="false"/>
-
-                            
-                            <Label text="Maintenance Plant"/>
-                            <Input value="{viewModel>/WARPL}" editable="false"/>
-                            <Label text="Reported By"/>
-                            <Input value="{viewModel>/QMNAM}" editable="false"/>
-
-                            <!-- Action fields -->
-                            <Label text="End Date" required="true"/>
-                            <DatePicker
-                                id="dpCloseDate"
-                                value="{viewModel>/Edate}"
-                                displayFormat="dd-MM-yyyy"
-                                valueFormat="yyyy-MM-dd"
-                                placeholder="Select End Date"/>
-
-                            <Label text="End Time" required="true"/>
-                            <TimePicker
-                                id="tpCloseTime"
-                                value="{viewModel>/Etime}"
-                                displayFormat="HH:mm:ss"
-                                valueFormat="HH:mm:ss"
-                                placeholder="Select End Time"/>
-
-                            <Label text="Room Value"/>
-                            <Input
-                                id="inpMsgrp"
-                                type="Number"
-                                value="{viewModel>/Msgrp}"
-                                liveChange=".onRoomValue"
-                                placeholder="0.00"/>
-
-                            <Label text="Cause Text / Remarks" required="true"/>
-                            <TextArea
-                                id="txtUrtxt"
-                                value="{viewModel>/Urtxt}"
-                                rows="4"
-                                growing="true"
-                                growingMaxLines="6"
-                                placeholder="Enter Cause Text / Remarks"/>
-
-                            <Label text=""/>
-                            <HBox wrap="Wrap">
-                                <Button
-                                    text="Notification Close"
-                                    type="Accept"
-                                    icon="sap-icon://complete"
-                                    press=".onCloseNotification"
-                                    enabled="{= !${viewModel>/busy} }"/>
-
-                                <Button
-                                    text="Reset"
-                                    type="Transparent"
-                                    icon="sap-icon://refresh"
-                                    press=".onResetForm"
-                                    class="sapUiTinyMarginBegin"
-                                    enabled="{= !${viewModel>/busy} }"/>
-                            </HBox>
-                        </f:SimpleForm>
-                    </content>
-                </Panel>
-
-            </VBox>
-        </content>
-    </Page>
-</mvc:View>
+                </VBox>
+            </content>
+        </Page>
+    </mvc:View>
