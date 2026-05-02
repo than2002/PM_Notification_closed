@@ -47,12 +47,12 @@
                                     columnsM="1"
                                     singleContainerFullSize="true">
 
-                                    <Label text="User ID / Email" required="true"/>
+                                    <!-- <Label text="User ID / Email" required="true"/>
                                     <Input
                                         id="inpUname"
                                         value="{viewModel>/Uname}"
                                         placeholder="Enter User ID / Email"
-                                        submit=".onGetDetails"/>
+                                        submit=".onGetDetails"/> -->
 
                                     <Label text="Notification Number" required="true"/>
                                     <Input
