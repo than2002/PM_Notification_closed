@@ -67,8 +67,8 @@
                                         submit=".onGetDetails"/>
 
 
-                                    <Label text=""/>
-                                    <HBox wrap="Wrap">
+                                 
+                                    <HBox justifyContent="Start" wrap="Wrap">
                                     
                                         <Button
                                             text="Get Details"
@@ -117,10 +117,11 @@
 
                                 <!-- Read-only details -->
                                 <Label text="Notification No"/>
-                                <Input value="{viewModel>/Notinum}" editable="false"/>
+                                <Input value="{viewModel>/Notinum}" editable="false"
+                                valueState="{= ${viewModel>/Notinum} ? 'None' : 'Error' }"/>
 
                                 <Label text="Notification Type"/>
-                                <Input value="{viewModel>/QMART}" editable="false"/>
+                                <Input value="{viewModel>/QMART}"/>
 
                                 <Label text="Description"/>
                                 <TextArea value="{viewModel>/QMTXT}" editable="false" rows="2"/>
@@ -186,7 +187,7 @@
                                     growingMaxLines="6"
                                     placeholder="Enter Cause Text / Remarks"/>
 
-                                <Label text=""/>
+                              
                                 <HBox wrap="Wrap">
                                     <Button
                                         text="Notification Close"

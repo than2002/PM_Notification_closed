@@ -1,269 +1,298 @@
-sap.ui.define([
-    "sap/ui/core/mvc/Controller",
-    "sap/ui/model/json/JSONModel",
-    "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
-    "sap/m/MessageBox",
-    "sap/m/MessageToast",
-    "sap/m/SelectDialog",
-    "sap/m/StandardListItem"
-], function (
-    Controller,
-    JSONModel,
-    Filter,
-    FilterOperator,
-    MessageBox,
-    MessageToast,
-    SelectDialog,
-    StandardListItem
-) {
-    "use strict";
+    sap.ui.define([
+        "sap/ui/core/mvc/Controller",
+        "sap/ui/model/json/JSONModel",
+        "sap/ui/model/Filter",
+        "sap/ui/model/FilterOperator",
+        "sap/m/MessageBox",
+        "sap/m/MessageToast",
+        "sap/m/SelectDialog",
+        "sap/m/StandardListItem"
+    ], function (
+        Controller,
+        JSONModel,
+        Filter,
+        FilterOperator,
+        MessageBox,
+        MessageToast,
+        SelectDialog,
+        StandardListItem
+    ) {
+        "use strict";
 
-    return Controller.extend("pmnotificationclosing.controller.View1", {
+        return Controller.extend("pmnotificationclosing.controller.View1", {
 
-        onInit: function () {
-            
-            var oVM = new JSONModel(this._getInitialData());
-            this.getView().setModel(oVM, "viewModel");
-
-           
-            oVM.setProperty("/Uname", this._getLoggedInUser());
-
-            this._setDefaultDateTime();
-            this._setUserHeader();
-        },
-
-      
-
-        _getInitialData: function () {
-            return {
-                Uname: "",
-                Notinum: "",
-                Msgrp: "",
-                Edate: "",
-                Etime: "",
-                Urtxt: "",
-
-                QMNUM: "",
-                QMART: "",
-                QMTXT: "",
-                EQUNR: "",
-                EQKTX: "",
-                ERDAT: "",
-                AUSVN: "",
-                AUZTV: "",
-                MSAUS: "",
-                IWERK: "",
-                WARPL: "",
-                QMNAM: "",
-
-                showDetails: false,
-                busy: false
-            };
-        },
-
-       
-        _getLoggedInUser: function () {
-           
-            try {
-                if (sap.ushell && sap.ushell.Container) {
-                    return sap.ushell.Container.getUser().getEmail().toUpperCase(); 
-                }
-            } catch (e) {
+            onInit: function () {
                 
-            }
-            return "";
-        },
+                var oVM = new JSONModel(this._getInitialData());
+                this.getView().setModel(oVM, "viewModel");
 
-        _setUserHeader: function () {
-           
-            var oModel = this.getView().getModel();
-            var sUser = this.getView().getModel("viewModel").getProperty("/Uname");
+            
+                oVM.setProperty("/Uname", this._getLoggedInUser());
 
-            if (oModel && sUser) {
-                var mHeaders = oModel.getHeaders() || {};
-                mHeaders["x-user-id"] = sUser.toUpperCase();
-                oModel.setHeaders(mHeaders);
-            }
-
-          
-        },
-
-        _setBusy: function (bBusy) {
-            this.getView().getModel("viewModel").setProperty("/busy", bBusy);
-        },
-
-        _hideDetails: function () {
-            this.getView().getModel("viewModel").setProperty("/showDetails", false);
-        },
-
-        _setDefaultDateTime: function () {
-            var oVM = this.getView().getModel("viewModel");
-            oVM.setProperty("/Edate", this._getTodayDate());
-            oVM.setProperty("/Etime", this._getCurrentTime());
-        },
-
-        _getTodayDate: function () {
-            var d = new Date();
-            return String(d.getDate()).padStart(2, "0") + "-" +
-                String(d.getMonth() + 1).padStart(2, "0") + "-" +
-                d.getFullYear();
-        },
-
-        _getCurrentTime: function () {
-            var d = new Date();
-            return String(d.getHours()).padStart(2, "0") + ":" +
-                String(d.getMinutes()).padStart(2, "0") + ":" +
-                String(d.getSeconds()).padStart(2, "0");
-        },
-
-        _resetScreen: function () {
-            var oVM = this.getView().getModel("viewModel");
-
-            oVM.setProperty("/Notinum", "");
-            oVM.setProperty("/Msgrp", "");
-            oVM.setProperty("/Urtxt", "");
-            oVM.setProperty("/showDetails", false);
-
-            this._setDefaultDateTime();
-        },
-
-        onValueHelpNoti: function () {
-            var oView = this.getView();
-            var oModel = oView.getModel();
-
-            this._setUserHeader();
-
-            if (!this._oNotiVH) {
-                this._oNotiVH = new SelectDialog({
-                    title: "Select Notification",
-                    noDataText: "No Data Found",
-
-                    liveChange: function (oEvent) {
-                        var sValue = oEvent.getParameter("value");
-                        var oBinding = oEvent.getSource().getBinding("items");
-
-                        var aFilters = [];
-                        if (sValue) {
-                            aFilters.push(new Filter("Notinum", FilterOperator.Contains, sValue));
-                        }
-                        oBinding.filter(aFilters);
-                    },
-
-                    confirm: function (oEvent) {
-                        var oItem = oEvent.getParameter("selectedItem");
-                        if (oItem) {
-                            var oObj = oItem.getBindingContext().getObject();
-                            this.getView().getModel("viewModel")
-                                .setProperty("/Notinum", oObj.Notinum);
-                            this._hideDetails();
-                        }
-                    }.bind(this)
-                });
-
-                this._oNotiVH.setModel(oModel);
-                oView.addDependent(this._oNotiVH);
-
-                this._oNotiVH.bindAggregation("items", {
-                    path: "/PMNotiClosingSet",
-                    template: new StandardListItem({
-                        title: "Notification: {Notinum} | Plant: {IWERK} | Type: {QMART}"
-                    })
-                });
-            }
-
-            this._oNotiVH.getBinding("items").refresh(true);
-            this._oNotiVH.open();
-        },
+                this._setDefaultDateTime();
+                this._setUserHeader();
+            },
 
         
 
-        onGetDetails: function () {
-            var oVM = this.getView().getModel("viewModel");
-            var oModel = this.getView().getModel();
+            _getInitialData: function () {
+                return {
+                    Uname: "",
+                    Notinum: "",
+                    Msgrp: "",
+                    Edate: "",
+                    Etime: "",
+                    Urtxt: "",
 
-            this._setUserHeader();
+                    QMNUM: "",
+                    QMART: "",
+                    QMTXT: "",
+                    EQUNR: "",
+                    EQKTX: "",
+                    ERDAT: "",
+                    AUSVN: "",
+                    AUZTV: "",
+                    MSAUS: "",
+                    IWERK: "",
+                    WARPL: "",
+                    QMNAM: "",
 
-            var sNotinum = (oVM.getProperty("/Notinum") || "").trim();
-            if (!sNotinum) {
-                MessageBox.warning("Enter Notification Number");
-                return;
-            }
+                    showDetails: false,
+                    busy: false
+                };
+            },
 
-            this._setBusy(true);
-
-            oModel.read("/PMNotiClosingSet('" + encodeURIComponent(sNotinum) + "')", {
-                success: function (oData) {
-                    this._setBusy(false);
-
-                    if (!oData || oData.Success === "F") {
-                        this._hideDetails();
-                        MessageBox.error(oData?.Message || "No Data / Unauthorized");
-                        return;
+        
+            _getLoggedInUser: function () {
+            
+                try {
+                    if (sap.ushell && sap.ushell.Container) {
+                        return sap.ushell.Container.getUser().getEmail().toUpperCase(); 
                     }
+                } catch (e) {
+                    
+                }
+                return "";
+            },
 
-                    Object.keys(oData).forEach(function (sKey) {
-                        oVM.setProperty("/" + sKey, oData[sKey]);
+            _setUserHeader: function () {
+            
+                var oModel = this.getView().getModel();
+                var sUser = this.getView().getModel("viewModel").getProperty("/Uname");
+
+                if (oModel && sUser) {
+                    var mHeaders = oModel.getHeaders() || {};
+                    mHeaders["x-user-id"] = sUser.toUpperCase();
+                    oModel.setHeaders(mHeaders);
+                }
+
+            
+            },
+
+            _setBusy: function (bBusy) {
+                this.getView().getModel("viewModel").setProperty("/busy", bBusy);
+            },
+
+            _hideDetails: function () {
+                this.getView().getModel("viewModel").setProperty("/showDetails", false);
+            },
+
+            _setDefaultDateTime: function () {
+                var oVM = this.getView().getModel("viewModel");
+                oVM.setProperty("/Edate", this._getTodayDate());
+                oVM.setProperty("/Etime", this._getCurrentTime());
+            },
+
+            _getTodayDate: function () {
+                var d = new Date();
+                return String(d.getDate()).padStart(2, "0") + "-" +
+                    String(d.getMonth() + 1).padStart(2, "0") + "-" +
+                    d.getFullYear();
+            },
+
+            _getCurrentTime: function () {
+                var d = new Date();
+                return String(d.getHours()).padStart(2, "0") + ":" +
+                    String(d.getMinutes()).padStart(2, "0") + ":" +
+                    String(d.getSeconds()).padStart(2, "0");
+            },
+
+           _formatDateForBackend: function (sDate) {
+                if (!sDate) return "";
+
+                var aParts = sDate.split("-"); // yyyy-MM-dd
+                return aParts[2] + "-" + aParts[1] + "-" + aParts[0]; // ✅ dd-MM-yyyy
+            },
+
+            _resetScreen: function () {
+                var oVM = this.getView().getModel("viewModel");
+
+                oVM.setProperty("/Notinum", "");
+                oVM.setProperty("/Msgrp", "");
+                oVM.setProperty("/Urtxt", "");
+                oVM.setProperty("/showDetails", false);
+
+                this._setDefaultDateTime();
+            },
+
+            onValueHelpNoti: function () {
+                var oView = this.getView();
+                var oModel = oView.getModel();
+
+                this._setUserHeader();
+
+                if (!this._oNotiVH) {
+                    this._oNotiVH = new SelectDialog({
+                        title: "Select Notification",
+                        noDataText: "No Data Found",
+
+                        liveChange: function (oEvent) {
+                            var sValue = oEvent.getParameter("value");
+                            var oBinding = oEvent.getSource().getBinding("items");
+
+                            var aFilters = [];
+                            if (sValue) {
+                                aFilters.push(new Filter("Notinum", FilterOperator.Contains, sValue));
+                            }
+                            oBinding.filter(aFilters);
+                        },
+
+                        confirm: function (oEvent) {
+                            var oItem = oEvent.getParameter("selectedItem");
+                            if (oItem) {
+                                var oObj = oItem.getBindingContext().getObject();
+                                this.getView().getModel("viewModel")
+                                    .setProperty("/Notinum", oObj.Notinum);
+                                this._hideDetails();
+                            }
+                        }.bind(this)
                     });
 
-                    oVM.setProperty("/showDetails", true);
-                    MessageToast.show("Data Loaded");
-                }.bind(this),
+                    this._oNotiVH.setModel(oModel);
+                    oView.addDependent(this._oNotiVH);
 
-                error: function () {
-                    this._setBusy(false);
-                    MessageBox.error("Backend Error");
-                }.bind(this)
-            });
-        },
+                    this._oNotiVH.bindAggregation("items", {
+                        path: "/PMNotiClosingSet",
+                        template: new StandardListItem({
+                            title: "Notification: {Notinum} | Plant: {IWERK} | Type: {QMART}"
+                        })
+                    });
+                }
 
-        onCloseNotification: function () {
-            var oVM = this.getView().getModel("viewModel");
-            var oModel = this.getView().getModel();
+                this._oNotiVH.getBinding("items").refresh(true);
+                this._oNotiVH.open();
+            },
 
-            this._setUserHeader();
+            
 
-            if (!oVM.getProperty("/Notinum")) {
-                MessageBox.warning("Enter Notification Number");
-                return;
-            }
+            onGetDetails: function () {
+                var oVM = this.getView().getModel("viewModel");
+                var oModel = this.getView().getModel();
 
-            if (!oVM.getProperty("/Urtxt")) {
-                MessageBox.warning("Enter Remarks");
-                return;
-            }
+                this._setUserHeader();
 
-            this._setBusy(true);
+                var sNotinum = (oVM.getProperty("/Notinum") || "").trim();
+                if (!sNotinum) {
+                    MessageBox.warning("Enter Notification Number");
+                    return;
+                }
+                if (!oModel) {
+                    MessageBox.error("Model not found");
+                    return;
+                }
+                this._setBusy(true);
 
-            oModel.callFunction("/CloseNotification", {
-                method: "POST",
-                urlParameters: {
+                oModel.read("/PMNotiClosingSet('" + sNotinum + "')", {
+                    success: function (oData) {
+                        this._setBusy(false);
+
+                        if (!oData || oData.Success === "F") {
+                            this._hideDetails();
+                            MessageBox.error(oData?.Message || "No Data / Unauthorized");
+                            return;
+                        }
+
+                        Object.keys(oData).forEach(function (sKey) {
+                            oVM.setProperty("/" + sKey, oData[sKey]);
+                        });
+
+                        oVM.setProperty("/showDetails", true);
+                        MessageToast.show("Data Loaded");
+                    }.bind(this),
+
+                    error: function () {
+                        this._setBusy(false);
+                        MessageBox.error("Backend Error");
+                    }.bind(this)
+                });
+            },
+
+            
+            onNotinumLiveChange: function (oEvent) {
+                var sValue = oEvent.getParameter("value");
+                this.getView()
+                .getModel("viewModel")
+                .setProperty("/Notinum", sValue);
+            },
+
+
+            onCloseNotification: function () {
+
+                var sUser = this._getLoggedInUser();
+                var oVM = this.getView().getModel("viewModel");
+                var oModel = this.getView().getModel();
+
+                oVM.setProperty("/Uname", sUser);
+
+                this._setUserHeader();
+
+                if (!oVM.getProperty("/Notinum")) {
+                    MessageBox.warning("Enter Notification Number");
+                    return;
+                }
+
+                if (!oVM.getProperty("/Urtxt")) {
+                    MessageBox.warning("Enter Remarks");
+                    return;
+                }
+
+                this._setBusy(true);
+
+                var sDate = this._formatDateForBackend(oVM.getProperty("/Edate"));
+
+                var oPayload = {
+                    Uname: sUser,
                     Notinum: oVM.getProperty("/Notinum"),
-                    Edate: oVM.getProperty("/Edate"),
-                    Etime: oVM.getProperty("/Etime"),
-                    Msgrp: oVM.getProperty("/Msgrp"),
+                    Edate: sDate, 
+                    Etime: oVM.getProperty("/Etime"), 
+                    Msgrp: oVM.getProperty("/Msgrp") || "",
                     Urtxt: oVM.getProperty("/Urtxt")
-                },
+                };
 
-                success: function (oData) {
-                    this._setBusy(false);
+                // console.log("FINAL PAYLOAD:", oPayload);
 
-                    if (oData?.Success === "F") {
-                        MessageBox.error(oData.Message);
-                        return;
-                    }
+                oModel.callFunction("/CloseNotification", {
+                    method: "POST",
+                    urlParameters: oPayload,
 
-                    MessageBox.success(oData?.Message || "Closed Successfully");
-                    this._resetScreen();
-                    oModel.refresh(true);
-                }.bind(this),
+                    success: function (oData) {
+                        this._setBusy(false);
 
-                error: function () {
-                    this._setBusy(false);
-                    MessageBox.error("Close Failed");
-                }.bind(this)
-            });
-        }
+                        if (oData?.Success === "F") {
+                            MessageBox.error(oData.Message);
+                            return;
+                        }
 
+                        MessageBox.success(oData?.Message || "Closed Successfully");
+                        this._resetScreen();
+                        oModel.refresh(true);
+                    }.bind(this),
+
+                    error: function () {
+                        this._setBusy(false);
+                        MessageBox.error("Close Failed");
+                    }.bind(this)
+                });
+            }
+        });
     });
-});
