@@ -71,19 +71,21 @@
                                     <HBox justifyContent="Start" wrap="Wrap">
                                     
                                         <Button
+                                            text="Check"
+                                            type="Transparent"
+                                            icon="sap-icon://message-information"
+                                            press=".onCheckNotification"
+                                            class="sapUiTinyMarginBegin"
+                                            enabled="{= !${viewModel>/busy} }"/>
+
+                                        <Button
                                             text="Get Details"
                                             type="Emphasized"
                                             icon="sap-icon://search"
                                             press=".onGetDetails"
+                                            class="sapUiTinyMarginBegin"
                                             enabled="{= !${viewModel>/busy} }"/>
 
-                                        <!-- <Button
-                                            text="Clear"
-                                            type="Transparent"
-                                            icon="sap-icon://reset"
-                                            press=".onClearAll"
-                                            class="sapUiTinyMarginBegin"
-                                            enabled="{= !${viewModel>/busy} }"/> -->
                                     </HBox>
                                 </f:SimpleForm>
                             </VBox>
@@ -120,8 +122,8 @@
                                 <Input value="{viewModel>/Notinum}" editable="false"
                                 valueState="{= ${viewModel>/Notinum} ? 'None' : 'Error' }"/>
 
-                                <Label text="Notification Type"/>
-                                <Input value="{viewModel>/QMART}"/>
+                                <Label text="Notification Type" />
+                                <Input value="{viewModel>/QMART}" editable="false"/>
 
                                 <Label text="Description"/>
                                 <TextArea value="{viewModel>/QMTXT}" editable="false" rows="2"/>
